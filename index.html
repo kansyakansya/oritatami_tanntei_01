@@ -102,14 +102,18 @@ function checkAnswer(){
         "mitaeki"
     ];
 
+    const correct =
+    answers.some(answer =>
+        input.includes(answer)
+    );
 
-    if(answers.includes(input)){
+    if(correct){
         document.getElementById("result").innerHTML =
-        "送信完了<br>正しい報告を受理しました。";
+        "送信完了<br>報告を受理しました。";
     }
     else{
         document.getElementById("result").innerHTML =
-        "送信失敗<br>該当する報告書が見つかりません。";
+        "送信失敗<br>報告内容を確認できません。";
     }
 }
 </script>
