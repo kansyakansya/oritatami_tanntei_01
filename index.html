@@ -119,6 +119,7 @@ button:disabled {
   max-width: 600px;
 
   background: white;
+  color: #222;
   border-radius: 12px;
   padding: 24px;
 
@@ -129,38 +130,47 @@ button:disabled {
 
 .reply-title {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
   line-height: 1.6;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 12px;
 }
 
-.closeBtn{
-  float:right;
-  background:none;
-  border:none;
-  color:#666;
-  font-size:24px;
-  cursor:pointer;
-  padding:0;
-  width:auto;
+#replyText {
+  line-height: 1.8;
 }
 
-.closeBtn:hover{
-  color:#000;
+.closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: auto;
 }
 
-.overlay{
-  display:none;
+.closeBtn:hover {
+  color: #000;
+}
 
-  position:fixed;
-  top:0;
-  left:0;
+.overlay {
+  display: none;
 
-  width:100%;
-  height:100%;
+  position: fixed;
+  top: 0;
+  left: 0;
 
-  background:rgba(0,0,0,0.45);
+  width: 100%;
+  height: 100%;
 
-  z-index:999;
+  background: rgba(0,0,0,0.45);
+
+  z-index: 999;
 }
   
 @keyframes fadeIn {
@@ -192,6 +202,10 @@ button:disabled {
   button {
     width: 100%;
     padding: 13px;
+  }
+
+  .closeBtn {
+    width: auto;
   }
 }
 </style>
@@ -227,12 +241,14 @@ button:disabled {
     📩 新着メール 1件<br>
     <strong>From: N.F@koreha.fiction.da</strong>
   </div>
-  
-<div id="reply" class="reply">
+
+</div>
 
 <div id="overlay" class="overlay" onclick="closeReply()"></div>
-    ×
-  </button>
+
+<div id="reply" class="reply">
+
+  <button class="closeBtn" onclick="closeReply()">×</button>
 
   <div class="reply-title">
     From: N.F@koreha.fiction.da<br>
@@ -240,7 +256,6 @@ button:disabled {
   </div>
 
   <div id="replyText"></div>
-
 
 </div>
 
@@ -250,7 +265,7 @@ const sendButton = document.getElementById("sendButton");
 
 answerBox.addEventListener("input", () => {
 
-if(answerBox.value.trim() === ""){
+  if(answerBox.value.trim() === ""){
     sendButton.disabled = true;
   } else {
     sendButton.disabled = false;
@@ -259,6 +274,7 @@ if(answerBox.value.trim() === ""){
 });
 
 let replyMessage = "";
+let typingTimer = null;
 
 function sendMail() {
   const input = document.getElementById("answer").value.trim();
@@ -300,15 +316,17 @@ function sendMail() {
 
     if (correct) {
       replyMessage =
-        "ありがとう。<br><br>" +
-        "「三田駅」に向えばいいのか。<br>" +
-        "君は優秀な助手だな。<br><br>" +
-        "次もよろしく頼むよ。";
+        "春野鏡子失踪事件についての報告を受領した。<br><br>" +
+        "内容を確認したところ、君の推測は正しいようだ。<br>" +
+        "三田駅へ向かうことにする。<br><br>" +
+        "協力に感謝する。<br><br>" +
+        "―― N.F";
     } else {
       replyMessage =
-        "ふむ…<br><br>" +
-        "どうも条件が合わないようだ。<br>" +
-        "もう一度確認してほしい。";
+        "春野鏡子失踪事件についての報告を受領した。<br><br>" +
+        "残念だが、報告内容と現在の調査記録が一致しない。<br><br>" +
+        "もう一度資料を確認してほしい。<br><br>" +
+        "―― N.F";
     }
   }, 2800);
 }
@@ -325,19 +343,38 @@ function openReply() {
 
   let i = 0;
 
-  const typing = setInterval(() => {
+  if (typingTimer) {
+    clearInterval(typingTimer);
+  }
+
+  typingTimer = setInterval(() => {
     replyText.innerHTML = replyMessage.slice(0, i);
     i++;
 
     if (i > replyMessage.length) {
-      clearInterval(typing);
+      clearInterval(typingTimer);
     }
   }, 25);
 }
+
 function closeReply() {
   document.getElementById("reply").style.display = "none";
   document.getElementById("overlay").style.display = "none";
+  document.getElementById("notification").style.display = "none";
 
+  const button = document.getElementById("sendButton");
+  const mailBox = document.getElementById("mailBox");
+
+  mailBox.classList.remove("sending");
+  button.textContent = "送信";
+
+  if (answerBox.value.trim() === "") {
+    button.disabled = true;
+  } else {
+    button.disabled = false;
+  }
+
+  answerBox.focus();
 }
 </script>
 
