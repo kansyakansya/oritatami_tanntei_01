@@ -5,152 +5,166 @@
 <title>報告メール</title>
 
 <style>
-body{
-  margin:0;
-  height:100vh;
-  background:linear-gradient(135deg,#dfe4ea,#f5f6fa);
-  font-family:Arial, sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+body {
+  margin: 0;
+  height: 100vh;
+  background: #e9eef3;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.mail{
-  width:720px;
-  background:#fff;
-  border-radius:12px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.18);
-  overflow:hidden;
+.app {
+  width: 760px;
 }
 
-.top{
-  background:#2f3542;
-  color:white;
-  padding:14px 18px;
-  font-weight:bold;
+.mail {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  overflow: hidden;
 }
 
-.row{
-  display:flex;
-  border-bottom:1px solid #ddd;
-  padding:12px 18px;
+.header {
+  background: #2f3542;
+  color: white;
+  padding: 14px 18px;
+  font-weight: bold;
 }
 
-.label{
-  width:80px;
-  color:#777;
+.row {
+  display: flex;
+  padding: 12px 18px;
+  border-bottom: 1px solid #ddd;
 }
 
-.value{
-  flex:1;
+.label {
+  width: 80px;
+  color: #777;
 }
 
-textarea{
-  width:100%;
-  height:260px;
-  border:none;
-  padding:18px;
-  box-sizing:border-box;
-  font-size:16px;
-  resize:none;
-  outline:none;
+textarea {
+  width: 100%;
+  height: 220px;
+  border: none;
+  padding: 18px;
+  font-size: 16px;
+  box-sizing: border-box;
+  resize: none;
+  outline: none;
 }
 
-.footer{
-  background:#f1f2f6;
-  padding:14px 18px;
-  text-align:right;
+.footer {
+  background: #f1f2f6;
+  padding: 14px 18px;
+  text-align: right;
 }
 
-button{
-  background:#1e90ff;
-  color:white;
-  border:none;
-  border-radius:6px;
-  padding:10px 26px;
-  font-size:15px;
-  cursor:pointer;
+button {
+  background: #1e90ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 28px;
+  font-size: 15px;
+  cursor: pointer;
 }
 
-button:hover{
-  background:#006fd6;
+.reply {
+  display: none;
+  margin-top: 20px;
+  background: white;
+  border-left: 6px solid #2f3542;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 }
 
-#result{
-  margin-top:18px;
-  padding:14px;
-  border-radius:8px;
-  text-align:center;
-  font-weight:bold;
-  display:none;
+.reply-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  line-height: 1.6;
 }
 
-.success{
-  background:#e8f8ef;
-  color:#1e7e34;
-  border:1px solid #8fd19e;
-}
-
-.error{
-  background:#fdecea;
-  color:#b02a37;
-  border:1px solid #f5a6a6;
+.loading {
+  display: none;
+  margin-top: 16px;
+  text-align: center;
+  color: #555;
 }
 </style>
 </head>
 
 <body>
 
-<div>
+<div class="app">
+
   <div class="mail">
-    <div class="top">新規報告メール</div>
+    <div class="header">新規報告メール</div>
 
     <div class="row">
       <div class="label">To</div>
-      <div class="value">investigation@report.local</div>
+      <div>N.F@koreha.fiction.da</div>
     </div>
 
     <div class="row">
       <div class="label">Subject</div>
-      <div class="value">調査報告書</div>
+      <div>調査報告書</div>
     </div>
 
     <textarea id="answer" placeholder="ここに報告内容を入力してください"></textarea>
 
     <div class="footer">
-      <button onclick="checkAnswer()">送信</button>
+      <button onclick="sendMail()">送信</button>
     </div>
   </div>
 
-  <div id="result"></div>
+  <div id="loading" class="loading">送信中...</div>
+
+  <div id="reply" class="reply">
+    <div class="reply-title">
+      From: N.F@koreha.fiction.da<br>
+      Subject: RE: 調査報告書
+    </div>
+    <div id="replyText"></div>
+  </div>
+
 </div>
 
 <script>
-function checkAnswer(){
-
+function sendMail() {
   const input = document.getElementById("answer").value.trim();
 
-   const answers = [
-        "みたえき",
-        "三田駅",
-        "MITAEKI",
-        "mitaeki"
-    ];
+  const answers = [
+    "たたかき",
+    "BK-0003",
+    "赤いぬいぐるみ"
+  ];
 
   const correct = answers.some(answer =>
     input.includes(answer)
   );
 
-  const result = document.getElementById("result");
-  result.style.display = "block";
+  document.getElementById("reply").style.display = "none";
+  document.getElementById("loading").style.display = "block";
 
-  if(correct){
-    result.className = "success";
-    result.innerHTML = "送信完了<br>正しい報告として受理されました。";
-  }else{
-    result.className = "error";
-    result.innerHTML = "送信失敗<br>報告内容を確認できませんでした。";
-  }
+  setTimeout(() => {
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("reply").style.display = "block";
+
+    if (correct) {
+      document.getElementById("replyText").innerHTML =
+        "報告を確認しました。<br><br>" +
+        "対象記録と一致する内容を確認。<br>" +
+        "この報告は正式に受理されました。<br><br>" +
+        "次の記録番号：<strong>BK-0004</strong>";
+    } else {
+      document.getElementById("replyText").innerHTML =
+        "報告内容を照合しました。<br><br>" +
+        "該当する記録は確認できませんでした。<br>" +
+        "内容を再確認してください。";
+    }
+  }, 2000);
 }
 </script>
 
