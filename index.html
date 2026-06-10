@@ -112,7 +112,6 @@ button:disabled {
   position: fixed;
   top: 50%;
   left: 50%;
-
   transform: translate(-50%, -50%);
 
   width: 90%;
@@ -124,7 +123,6 @@ button:disabled {
   padding: 24px;
 
   box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-
   z-index: 1000;
 }
 
@@ -169,7 +167,6 @@ button:disabled {
   height: 100%;
 
   background: rgba(0,0,0,0.45);
-
   z-index: 999;
 }
   
@@ -264,13 +261,11 @@ const answerBox = document.getElementById("answer");
 const sendButton = document.getElementById("sendButton");
 
 answerBox.addEventListener("input", () => {
-
   if(answerBox.value.trim() === ""){
     sendButton.disabled = true;
   } else {
     sendButton.disabled = false;
   }
-
 });
 
 let replyMessage = "";
@@ -286,17 +281,17 @@ function sendMail() {
     "mitaeki"
   ];
 
-const hintWords = [
-  "ヒント",
-  "かたえき",
-  "KATAEKI",
-  "かた駅",
-];
+  const hintWords = [
+    "ヒント",
+    "かたえき",
+    "KATAEKI",
+    "かた駅"
+  ];
 
-const isHint = hintWords.some(word =>
-  input.includes(word)
-);
-  
+  const isHint = hintWords.some(word =>
+    input.includes(word)
+  );
+
   const correct = answers.some(answer =>
     input.includes(answer)
   );
@@ -324,23 +319,22 @@ const isHint = hintWords.some(word =>
   setTimeout(() => {
     status.style.display = "none";
     notification.style.display = "block";
-    
-    else if (correct)  {
+
+    if (isHint) {
       replyMessage =
         "ふむ…その駅名は東京にはないな。<br><br>" +
         "部屋に大量にある「鏡」これをうまく使えないだろうか。<br><br>" +
         "鏡文字の他に、文字を変換できそうな…なにか…<br><br>" +
         "―― N.F";
-
-}
-    if (correct) {
+    }
+    else if (correct) {
       replyMessage =
         "春野鏡子失踪事件についての報告を受領した。<br><br>" +
-        "なるほど…そこに向えばいいんだな<br>" +
+        "なるほど…そこに向えばいいんだな。<br>" +
         "君は優秀な助手だ。<br><br>" +
         "次回も頼むぞ。<br><br>" +
         "―― N.F";
-    } 
+    }
     else {
       replyMessage =
         "春野鏡子失踪事件についての報告を受領した。<br><br>" +
@@ -348,6 +342,7 @@ const isHint = hintWords.some(word =>
         "もう一度資料を確認してほしい。<br><br>" +
         "―― N.F";
     }
+
   }, 2800);
 }
 
