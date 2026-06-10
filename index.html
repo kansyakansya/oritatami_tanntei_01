@@ -88,17 +88,16 @@ button{
 </div>
 
 <script>
-function checkAnswer(){
-
-    const input =
-    document.getElementById("answer")
-    .value
-    .trim();
+function checkAnswer() {
+    const input = document.getElementById("answer").value.trim();
 
     const answers = [
-        "たたかき",
-        "BK-0003"
+        "みたえき",
+        "三田駅",
+        "MITAEKI",
+        "mitaeki"
     ];
+
 
     if(answers.includes(input)){
         document.getElementById("result").innerHTML =
