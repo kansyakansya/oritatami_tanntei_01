@@ -1,0 +1,16 @@
+<input id="answer" type="text">
+<button onclick="checkAnswer()">判定</button>
+
+<p id="result"></p>
+
+<script>
+function checkAnswer() {
+    const input = document.getElementById("answer").value.trim();
+
+    if (input === "正解の言葉") {
+        document.getElementById("result").textContent = "正解！";
+    } else {
+        document.getElementById("result").textContent = "不正解";
+    }
+}
+</script>
