@@ -109,12 +109,22 @@ button:disabled {
 
 .reply {
   display: none;
-  margin-top: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 90%;
+  max-width: 600px;
+
   background: white;
-  border-left: 6px solid #2f3542;
-  padding: 18px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-  animation: fadeIn 0.5s;
+  border-radius: 12px;
+  padding: 24px;
+
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+
+  z-index: 1000;
 }
 
 .reply-title {
