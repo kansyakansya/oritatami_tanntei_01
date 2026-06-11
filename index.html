@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>報告メール（ヒント判定版）</title>
+<title>報告メール</title>
 <style>
 body {margin:0;height:100vh;background:#e9eef3;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;flex-direction:column;padding:14px;}
 .app {width:100%; max-width:760px;}
@@ -105,7 +105,7 @@ function sendMail(){
 
     if(isHint){
       canPostToX=false;
-      replyMessage="ふむ…その駅名は東京にはないな。<br><br>あともう一歩だと思うんだが…。<br><br>鏡文字に加えて、もう一ひねり必要そうだ。<br>この部屋に大量にある「鏡」を使えないだろうか。<br><br>―― N.F";
+      replyMessage="ふむ…その駅名は東京にはないな。<br><br>あともう一歩だと思うんだが…。<br><br>鏡文字に加えて、もうひとひねり必要そうだ。<br>この部屋に大量にある「鏡」を使えないだろうか。<br><br>―― N.F";
     } else if(correct){
       canPostToX=true;
       replyMessage="春野鏡子失踪事件についての報告を受領した。<br><br>なるほど…そこに向えばいいんだな。<br>君は優秀な助手だ。<br><br>次回も頼むぞ。<br><br>―― N.F";
