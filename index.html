@@ -78,15 +78,29 @@ let typingTimer = null;
 let canPostToX = false;
 let correctHashes = [];
 
-// 正解ハッシュを外部JSONから取得
-fetch("answers.json")
-  .then(r => r.json())
-  .then(data => { correctHashes = data.hashes; })
-  .catch(err => console.error("正解データ読み込み失敗:", err));
+// 外部JSONからハッシュ読み込み
+async function loadHashes() {
+  try {
+    const response = await fetch("answers.json");
+    const data = await response.json();
+    correctHashes = data.hashes;
+  } catch(e) {
+    console.error("正解ハッシュの読み込み失敗:", e);
+  }
+}
+
+// ページロード時に読み込む
+loadHashes();
 
 async function sendMail() {
   const input = answerBox.value.trim();
   if (!input) return;
+
+  // JSONがまだ読み込まれていない場合は待機
+  if (correctHashes.length === 0) await loadHashes();
+
+  const inputHash = await sha256(input);
+  const correct = correctHashes.includes(inputHash);
 
   const mailBox = document.getElementById("mailBox");
   const button = document.getElementById("sendButton");
@@ -100,14 +114,12 @@ async function sendMail() {
   status.style.display = "block";
   status.textContent = "送信中...";
 
-  const inputHash = await sha256(input);
-  const correct = correctHashes.includes(inputHash);
-
   setTimeout(() => { button.textContent = "✓ 送信済み"; status.textContent = "送信済み"; }, 1200);
 
   setTimeout(() => {
     status.style.display = "none";
     notification.style.display = "block";
+
     if (correct) {
       canPostToX = true;
       replyMessage = "春野鏡子失踪事件についての報告を受領した。<br><br>なるほど…そこに向えばいいんだな。<br>君は優秀な助手だ。<br><br>次回も頼むぞ。<br><br>―― N.F";
@@ -154,9 +166,9 @@ function closeReply() {
   answerBox.focus();
 }
 
-// X投稿
+// Xポスト（元の謎ツイート引用）
 function postToX() {
-  const originalTweetUrl = "https://twitter.com/youraccount/status/1234567890"; // 元ツイートURL
+  const originalTweetUrl = "https://twitter.com/youraccount/status/1234567890";
   const postText =
     "【File001：おりたたみ探偵事務所　春野鏡子失踪事件】\n" +
     "春野鏡子失踪事件の報告を完了。\n" +
