@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>報告メール（ハッシュ化判定）</title>
+<title>報告メール（単語判定版）</title>
 <style>
 body {margin:0;height:100vh;background:#e9eef3;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;padding:14px;}
 .app {width:100%; max-width:760px;}
@@ -62,12 +62,6 @@ button:disabled {background:#999;cursor:not-allowed;opacity:0.5;}
 </div>
 
 <script>
-// SHA-256 ハッシュ
-async function sha256(str) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
-}
-
 const answerBox = document.getElementById("answer");
 const sendButton = document.getElementById("sendButton");
 
@@ -76,31 +70,16 @@ function checkInput() { sendButton.disabled = answerBox.value.trim() === ""; }
 let replyMessage = "";
 let typingTimer = null;
 let canPostToX = false;
-let correctHashes = [];
 
-// 外部JSONからハッシュ読み込み
-async function loadHashes() {
-  try {
-    const response = await fetch("answers.json");
-    const data = await response.json();
-    correctHashes = data.hashes;
-  } catch(e) {
-    console.error("正解ハッシュの読み込み失敗:", e);
-  }
-}
+// 正解単語
+const answers = ["三田駅"];
 
-// ページロード時に読み込む
-loadHashes();
-
-async function sendMail() {
+function sendMail() {
   const input = answerBox.value.trim();
   if (!input) return;
 
-  // JSONがまだ読み込まれていない場合は待機
-  if (correctHashes.length === 0) await loadHashes();
-
-  const inputHash = await sha256(input);
-  const correct = correctHashes.includes(inputHash);
+  // 入力文に正解単語が含まれていれば正解
+  const correct = answers.some(word => input.includes(word));
 
   const mailBox = document.getElementById("mailBox");
   const button = document.getElementById("sendButton");
@@ -166,7 +145,7 @@ function closeReply() {
   answerBox.focus();
 }
 
-// Xポスト（元の謎ツイート引用）
+// X投稿（公式Intentリンク）
 function postToX() {
   const originalTweetUrl = "https://twitter.com/youraccount/status/1234567890";
   const postText =
